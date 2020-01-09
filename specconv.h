@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CALIBRATION
+ * Copyright 2020 CALIBRATION
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -19,15 +19,36 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#include "mainwindow.h"
+#ifndef SPECCONV_H
+#define SPECCONV_H
 
-#include <QApplication>
+#include <QList>
+#include "qcustomplot.h"
 
-int main(int argc, char *argv[])
+class SpecConv
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+public:
+    SpecConv();
+private:
+    QList<double> xWaveLengthOrigin;
+    QList<double> yRadOrigin;
 
-    return a.exec();
-}
+private:
+    QList<double> xCentralWave;//计算的高斯函数的中心波长
+    QList<double> xVarWave;//计算高斯函数的方差
+    QList<double> yConvResult;//卷积之后的结果
+
+public:
+    void importData(QWidget *,const QString ,QCustomPlot *);//导入原始数据
+    void calConv(QWidget *parent,QCustomPlot *qcp,double start,const double step);//计算卷积和
+    void exportData(QWidget*,const QString filePath);//导出结果
+    void plot(QCustomPlot *,QString,const int mode);//画图，画原始导入数据
+
+private:
+    bool isEmptyImportData();//判断成员变量是否为空，如果为空则返回True
+    bool isEmptyExportData();
+    double calVar(double start,int n);
+    double getGaussResult(const QList<double> signalX,QList<double> signalY,double fstart,double fend,double var);
+};
+
+#endif // SPECCONV_H

@@ -19,52 +19,45 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef RANGEDATA_H
+#define RANGEDATA_H
+#include <QList>
+#include "math.h"
 
-#include <QMainWindow>
+using namespace std;
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
-
-class MainWindow : public QMainWindow
+class RangeData
 {
-    Q_OBJECT
+private:
+    QList<double> DataN;
+    QList<double> DataDiff;
+    QList<double> DataWavelength;
 
+    double DataSingleN;
+    double DataSingleDiff;
+    //计算公式中的固定参数
+private:
+    const double p1 = 0.6961663;
+    const double p2 = -pow(0.0684043,2);
+    const double p3 = 0.4079426;
+    const double p4 = -pow(0.1162414,2);
+    const double p5 = 0.8974794;
+    const double p6 = -pow(9.896161,2);
+    //计算导数时候的步长选取，使用导数定义计算
+    const double diffstep = 1e-10;
+private:
+    double calN(double );
+    double calDiff(double );
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private slots:
-    void on_actioncalN_triggered();
-
-    void on_btnHomeCalN_clicked();
-
-    void on_actionHome_triggered();
-
-    void on_actioncalAngle_triggered();
-
-    void on_actionBRDF_triggered();
-
-    void on_btnHomeCalAngle_clicked();
-
-    void on_btnHomeBRDF_clicked();
-
-
-    void on_actionExit_triggered();
-
-    void on_actionOpen_triggered();
-
-    void on_btnCalNCal_clicked();
-
-private:
-    Ui::MainWindow *ui;
-
-//    const QStringList pageName = {"您在主页","您在计算反射率页面","您在计算角度页面","你在BRDF数据处理页面"};
-
-private:
-    void init();
-    
+    RangeData();
+//一定波长范围的
+public:
+    QList<QList<double> > getData();
+    void setData(double lower,double upper,double step);
+//单个波长的
+public:
+    QList<double> getSingleData();
+    void setSingleData(double );
 };
-#endif // MAINWINDOW_H
+
+#endif // RANGEDATA_H

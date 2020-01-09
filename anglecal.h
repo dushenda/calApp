@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 CALIBRATION
+ * Copyright 2020 CALIBRATION
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -19,15 +19,27 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#include "mainwindow.h"
+#ifndef ANGLECAL_H
+#define ANGLECAL_H
 
-#include <QApplication>
+#include <QDateTime>
+#include <QList>
 
-int main(int argc, char *argv[])
+class angleCal
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+public:
+    angleCal();
+private:
+    double calZenith(QDateTime dt,double lon,double lat);
+    double calAzimuth(QDateTime dt,double lon,double lat);
+    double calED(QDateTime BjDt);//计算赤纬
+    double calTau(QDateTime BjDt,double lon);//计算时角
+    double calSunCape(QDateTime BjDt);//计算日角
+    double deg2rad(double deg);
+    double rad2deg(double rad);
+public:
+    QList<double> calAngleSingle(QDateTime dt,double lon,double lat);
+    QList<QList<double> > calAngleRange(QDateTime sdt,QDateTime edt,int step,double lon,double lat);
+};
 
-    return a.exec();
-}
+#endif // ANGLECAL_H
